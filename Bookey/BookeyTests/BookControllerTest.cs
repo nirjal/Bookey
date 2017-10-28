@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Bookey.Controllers;
-using System.Web;
-using System.Web.Http;
-
+using Bookey.Models;
+using System.Web.Http.Results;
 
 namespace BookeyTests
 {
@@ -15,9 +14,12 @@ namespace BookeyTests
         public void ShouldReturnBookWhenProvidedBookName()
         {
 
-            var bookName = "Alice";
+            var bookName = "Alice in Wonderland";
             var bookCtrl = new BookController();
             var result =   bookCtrl.GetBook(bookName);
+			var contentResult = result as OkNegotiatedContentResult<Book>;
+			Assert.AreEqual(contentResult.Content.Name, "Alice in Wonderland");
+			
 
         }
 
@@ -27,13 +29,23 @@ namespace BookeyTests
 
             var bookNamePartial = "Alice";
             var bookCtrl = new BookController();
-           // bookCtrl.
-        }
+			var result = bookCtrl.GetBook(bookNamePartial);
+			var contentResult = result as OkNegotiatedContentResult<Book>;
+			Assert.AreEqual(contentResult.Content.Name, "Alice in Wonderland");
 
-        [TestMethod]
+			// bookCtrl.
+		}
+
+		[TestMethod]
         public void ShouldShowIfBookIsAvailable()
         {
-        }
+			var bookNamePartial = "Alice";
+			var bookCtrl = new BookController();
+			var result = bookCtrl.GetBook(bookNamePartial);
+			var contentResult = result as OkNegotiatedContentResult<Book>;
+			Assert.AreEqual(contentResult.Content.Name, "Alice in Wonderland");
+
+		}
 
         [TestMethod]
         public void ShouldRreturnErrorIfBookNotFound()
